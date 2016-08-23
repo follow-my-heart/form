@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>1</title>
+</head>
+<body>
+    <div>
+        <span>省</span>
+        <select id="province"></select>
+        <span>市</span>
+        <select id="city"></select>
+        <span>区</span>
+        <select id="county"></select>
+    </div>
+    <script type="text/javascript">
+    (function() {
+        //TODO: 如果需要的话可以使用promise拍平回调拉取后台数据
+        // 定义基础的数据-测试
+        var datas = {
+            '上海市': {
+                '上海市': ['浦东新区', '金山区', '嘉定区']
+            },
+            '北京市': {
+                '北京市': ['东城区', '西城区', '朝阳区']
+            },
+            '江苏省': {
+                '盐城市': ['盐都区', '亭湖区'],
+                '南京市': ['玄武区', '江宁区']
+            }
+        }
+        //定义各个变量
+        var province = document.getElementById("province");
+            city = document.getElementById("city");
+            county = document.getElementById("county");
+        //初始化方法
+        function init() {
+            //province setting
+            var _dom = "<option value='-1' style='display:none' selected>请选择省</option>";
+            for (var i in datas) {
+                _dom += '<option>' + i + '</option>'
+            }
+            province.innerHTML = _dom;
+            provinceChange();
+            cityChange();
+        }
+        //当省select改变时将会呼叫此函数
+        function provinceChange() {
+            //city setting
+            var _province = province.value;
+            var _dom = "<option value='-1'>请选择市</option>";
+            if (parseInt(_province) != -1)//没有选择时没有值
+             {
+                for (var i in datas[_province]) {
+                    _dom += '<option>' + i+ '</option>'
+                }
+            }
+            city.innerHTML = _dom;
+            cityChange();
+        }
+        //当市select改变时将会呼叫此函数
+        function cityChange() {
+            //province setting
+            var _province = province.value;
+            var _city = city.value;
+            var _dom = "<option value='-1'>请选择区</option>";
+            if (parseInt(_city) != -1) {
+                for (var i in datas[_province][_city]) {
+                    _dom += '<option>' + datas[_province][_city][i] + '</option>'
+                }
+            }
+            county.innerHTML = _dom;
+        }
+        //初始化
+        init();
+        //绑定监听器及回调
+        province.addEventListener('change', provinceChange);
+        city.addEventListener('change', cityChange);
+    })();
+    </script>
+</body>
+
+</html>
